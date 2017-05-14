@@ -58,6 +58,7 @@ public class MyAdapter extends RealmBaseAdapter<Memo> implements ListAdapter {
     //privateにするとエラー
     private Context mContext;
     private DeleteListener mListener;
+    private AddListener mlistener;
     private LayoutInflater LayoutInflater = null;
     private OrderedRealmCollection<Memo> mOrderedRealmCollection;
 
@@ -71,7 +72,10 @@ public class MyAdapter extends RealmBaseAdapter<Memo> implements ListAdapter {
 
     private static class MyViewHolder{
         TextView MemoTitle;
+        TextView LikeCount;
         ImageView delete;
+        ImageView add;
+
         //TextView LikeCount;
         //ImageView LikeButton;
     }
@@ -82,7 +86,6 @@ public class MyAdapter extends RealmBaseAdapter<Memo> implements ListAdapter {
         return getItem(position).getTextId();
     }
 
-
     @Override
     public int getCount(){
 
@@ -92,29 +95,48 @@ public class MyAdapter extends RealmBaseAdapter<Memo> implements ListAdapter {
 
     }
 
-
     public void setCallback(DeleteListener callback){
         mListener = callback;
     }
+
+    public void setcallback(AddListener callback){mlistener = callback;}
 
     public interface DeleteListener{
         void delete(long memoId);
     }
 
-    //Viewを取得する。
-    // getTagとは？
+    public interface AddListener{
+        void add(long memoId);
+    }
+
+    //getViewの引数としているconvertViewはListViewのひとつの項目となるListView
+    // convertViewがnullだった場合には、item.xmlからインスタンスをとってきてタグをつける。
+    //2回目以降はとってきたときにtagをつけているので、tagでインスタンスを取得することにしている。
     @Override
     public View getView(final int position, View convertView, ViewGroup parent){
 
-        MyViewHolder myViewHolder;
+        final MyViewHolder myViewHolder;
 
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_layout, parent, false);
             //インスタンスの作製
             myViewHolder = new MyViewHolder();
             myViewHolder.MemoTitle = (TextView) convertView.findViewById(R.id.item_title);
+            myViewHolder.LikeCount = (TextView) convertView.findViewById(R.id.item_likes);
 
             ImageView delete = (ImageView) convertView.findViewById(R.id.imageDelete);
+            ImageView add = (ImageView) convertView.findViewById(R.id.imageLike);
+
+            //add設定
+            add.setTag(getItemId(position));
+            add.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    mlistener.add((long) v.getTag());
+                }
+            });
+
+            //削除設定
             delete.setTag(getItemId(position));
             delete.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -122,14 +144,21 @@ public class MyAdapter extends RealmBaseAdapter<Memo> implements ListAdapter {
                     mListener.delete((long) v.getTag());
                 }
             });
-            myViewHolder.delete = delete;
 
+            myViewHolder.delete = delete;
+            myViewHolder.add = add;
             convertView.setTag(myViewHolder);
+
         }else {
+
             myViewHolder = (MyViewHolder) convertView.getTag();
             myViewHolder.delete.setTag(getItemId(position));
+            myViewHolder.add.setTag(getItemId(position));
         }
+
+        myViewHolder.LikeCount.setText(getItem(position).getNum() + "likes");
         myViewHolder.MemoTitle.setText(getItem(position).getTitle());
+
         return convertView;
 
     }

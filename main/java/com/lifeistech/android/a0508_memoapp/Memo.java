@@ -15,6 +15,8 @@ public class Memo extends RealmObject {
     private String text;
     private String title;
 
+    private int likeNum = 0;
+
     //Standard getters & setters generated
     //変数（フィールドの値）の設定後、変数.methodでメソッドが使用可能
 
@@ -35,6 +37,13 @@ public class Memo extends RealmObject {
     }
     public void setTextId(long TextId){
         this.TextId = TextId;
+    }
+
+    public int getNum(){
+        return likeNum;
+    }
+    public void setNum(int likeNum){
+        this.likeNum = likeNum;
     }
 
     //初期値｛TextId｝をsetTextIdクラスのフィールドであるthis.TextIdに代入している。

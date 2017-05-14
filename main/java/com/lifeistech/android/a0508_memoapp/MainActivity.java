@@ -13,9 +13,11 @@ import io.realm.Realm;
 
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements MyAdapter.DeleteListener {
+public class MainActivity extends AppCompatActivity implements MyAdapter.DeleteListener, MyAdapter.AddListener {
 
-    private static final String[] initData = {"sample_1", "sample_2"};
+    private static final String[] initData = {"sample_1"};
+    private static final String[] initText = {"sample_text_1"};
+    private static final int[] initNum = {0};
     private Realm mRealm;
     private MyAdapter mAdapter;
     private ListView mListView;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.DeleteL
 
                 //詳細画面開始　"memo_id"は第一引数でKey、Long.toStringは第二引数で渡したいlong型idをint型にしている。
                 Intent intent = new Intent(MainActivity.this, MemoEdit.class);
-                intent.putExtra("Memo_id", Long.toString(id));
+                intent.putExtra("memo_id", Long.toString(id));
                 startActivity(intent);
 
             }
@@ -74,13 +76,17 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.DeleteL
             for (int i = 0; i<initData.length; i++){
                 Memo memo = mRealm.createObject(Memo.class, i);
                 memo.setTitle(initData[i]);
+                memo.setText(initText[i]);
+                memo.setNum(initNum[i]);
             }
             mRealm.commitTransaction();
         }
+
         //adapter = new Adapter(context, layout_file, object?)という感じ
         mAdapter = new MyAdapter(this, mMemo);
         mListView.setAdapter(mAdapter);
         mAdapter.setCallback(this);
+        mAdapter.setcallback(this);
     }
 
     //Memoを削除
@@ -95,11 +101,18 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.DeleteL
         });
     }
 
-    /*
-    private void add_like(){
-
+    //Likeを追加
+    private void addLike(long memoId){
+        final long id = memoId;
+        mRealm.executeTransaction(new Realm.Transaction(){
+            @Override
+            public void execute(Realm realm){
+                Memo memo =realm.where(Memo.class).equalTo("TextId", id).findFirst();
+                int number = memo.getNum() + 1;
+                memo.setNum(number);
+            }
+        });
     }
-    */
 
     @Override
     protected void onDestroy(){
@@ -111,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.DeleteL
     @Override
     public void delete(long memoId){deleteMemo(memoId);}
 
-
+    @Override
+    public void add(long memoId){addLike(memoId);}
 
 }

@@ -18,9 +18,6 @@ public class MemoEdit extends AppCompatActivity implements View.OnClickListener 
     private EditText editTitle;
     private long Memo_id;
 
-    View text_view;
-    View title_view;
-
     //Activity起動時の初期設定
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +31,8 @@ public class MemoEdit extends AppCompatActivity implements View.OnClickListener 
         //getActionBar().setDisplayHomeAsUpEnabled(true);
 
         //EditのIDづけ
-        editText = (EditText) text_view.findViewById(R.id.edit_text);
-        editTitle = (EditText) title_view.findViewById(R.id.edit_title);
+        editText = (EditText) findViewById(R.id.edit_text);
+        editTitle = (EditText) findViewById(R.id.edit_title);
 
         //保存ボタンと廃棄ボタンの設定
         findViewById(R.id.save).setOnClickListener(this);
@@ -87,9 +84,9 @@ public class MemoEdit extends AppCompatActivity implements View.OnClickListener 
 
             //データがある場合は更新
             Memo_id = Long.parseLong(memo_id);
-            editText.setText(mRealm.where(Memo.class).equalTo("id", Memo_id).findFirst().getText());
+            editText.setText(mRealm.where(Memo.class).equalTo("TextId", Memo_id).findFirst().getText());
             editText.setSelection(editText.getText().length());
-            editTitle.setText(mRealm.where(Memo.class).equalTo("id", Memo_id).findFirst().getTitle());
+            editTitle.setText(mRealm.where(Memo.class).equalTo("TextId", Memo_id).findFirst().getTitle());
             editTitle.setSelection(editTitle.getText().length());
         }
     }
@@ -107,7 +104,6 @@ public class MemoEdit extends AppCompatActivity implements View.OnClickListener 
                 memo.setTitle(editTitle.getText().toString());
 
                 mRealm.insertOrUpdate(memo);
-                mRealm.copyToRealmOrUpdate(memo);
             }
         });
     }
