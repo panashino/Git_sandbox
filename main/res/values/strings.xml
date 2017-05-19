@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">0508_MemoApp</string>
-    <string name="title_activity_memo_edit">MemoEdit</string>
+    <string name="app_name">My Memo</string>
 </resources>

@@ -2,19 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#cddc39</item>
-        <item name="colorPrimaryDark">#99aa00</item>
-        <item name="colorAccent">#ec407a</item>
+        <item name="colorPrimary">#00838f</item>
+        <item name="colorPrimaryDark">#005662</item>
+        <item name="colorAccent">#ff80ab</item>
     </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
